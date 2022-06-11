@@ -7,3 +7,9 @@
 
 import Foundation
 
+class MoviesMiddleware {
+    var moviesData = [Movies]()
+    func appendToBasket(newMovie: Movies) {
+        moviesData.append(newMovie)
+    }
+}

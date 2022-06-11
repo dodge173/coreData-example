@@ -10,5 +10,5 @@ import Foundation
 class AppManger {
     static let shared = AppManger()
     private init () {}
-    var moviesData = [Movies]()
+    var moviesData: Movies?
 }

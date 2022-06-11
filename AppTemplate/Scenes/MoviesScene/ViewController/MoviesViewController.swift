@@ -9,6 +9,7 @@ import UIKit
 
 class MoviesViewController: UIViewController {
     // MARK: - Props
+    var middleware = MoviesMiddleware()
     // MARK: - IBOutlets
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyLabel: UILabel!
@@ -21,6 +22,7 @@ class MoviesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DispatchQueue.main.async {
+            self.loadData()
             self.tableView.reloadData()
             self.handleEmpty()
         }
@@ -43,7 +45,7 @@ class MoviesViewController: UIViewController {
         tableView.registerCellNib(cellClass: MoviesTableViewCell.self)
     }
     func handleEmpty() {
-        if AppManger.shared.moviesData.isEmpty {
+        if middleware.moviesData.isEmpty {
             tableView.isHidden = true
             emptyLabel.isHidden = false
         } else {
@@ -53,7 +55,8 @@ class MoviesViewController: UIViewController {
     }
     // MARK: - Data Functions
     func loadData() {
-        
+        guard let movieData = AppManger.shared.moviesData else {return}
+        middleware.appendToBasket(newMovie: movieData)
     }
     // MARK: - IBActions
     @IBAction func addNewMovies(_ sender: Any) {
@@ -68,14 +71,14 @@ extension MoviesViewController: UITableViewDataSource {
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return AppManger.shared.moviesData.count
+        return middleware.moviesData.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeue() as MoviesTableViewCell
-        let yearString = String(AppManger.shared.moviesData[indexPath.row].movieYear)
-        cell.textLabel?.text = AppManger.shared.moviesData[indexPath.row].movieTitle
+        let yearString = String(middleware.moviesData[indexPath.row].movieYear)
+        cell.textLabel?.text = middleware.moviesData[indexPath.row].movieTitle
         cell.detailTextLabel?.text = yearString
-        cell.imageView?.image = AppManger.shared.moviesData[indexPath.row].movieImage
+        cell.imageView?.image = middleware.moviesData[indexPath.row].movieImage
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -87,7 +90,7 @@ extension MoviesViewController: UITableViewDataSource {
 extension MoviesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let movie = AppManger.shared.moviesData[indexPath.row]
+        let movie = middleware.moviesData[indexPath.row]
         let storyboard = UIStoryboard(name: "DetailsSB", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "DetailsViewController") as! DetailsViewController
         vc.middleware.movie = movie

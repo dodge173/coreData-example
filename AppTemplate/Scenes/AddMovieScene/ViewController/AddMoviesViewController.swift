@@ -77,7 +77,7 @@ class AddMoviesViewController: UIViewController {
         let MovieRateTF = MovieRateTF.text ?? ""
         guard let imageView = imageView.image else { return }
         middleware.addNewMovies(moviesTitle: moviesTitle, movieYear: movieYearTF, movieImage: imageView, movieRating: MovieRateTF, movieGenre: movieGenTF)
-        AppManger.shared.moviesData = middleware.moviesData
+        AppManger.shared.moviesData = middleware.moviesData[0]
         self.navigationController?.popViewController(animated: true)
     }
 
