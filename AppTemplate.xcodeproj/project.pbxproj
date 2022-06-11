@@ -176,7 +176,6 @@
 			isa = PBXGroup;
 			children = (
 				9BB182C92854E045003D2E26 /* Assets.xcassets */,
-				9BB182C62854E043003D2E26 /* AppTemplate.xcdatamodeld */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -234,6 +233,7 @@
 		9BB1830A2854E3A0003D2E26 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				9BB1831D28550ACA003D2E26 /* DataBase */,
 				9BB1830B2854F4B3003D2E26 /* AppManger.swift */,
 				9BB1831128550549003D2E26 /* TableView+Ext.swift */,
 			);
@@ -319,6 +319,14 @@
 				9BB183032854E2AB003D2E26 /* DetailsSB.storyboard */,
 			);
 			path = Storyboard;
+			sourceTree = "<group>";
+		};
+		9BB1831D28550ACA003D2E26 /* DataBase */ = {
+			isa = PBXGroup;
+			children = (
+				9BB182C62854E043003D2E26 /* AppTemplate.xcdatamodeld */,
+			);
+			path = DataBase;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

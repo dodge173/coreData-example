@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Movies {
+struct Moviess {
     let movieTitle: String
     let movieYear: String
     let movieImage: UIImage

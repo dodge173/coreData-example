@@ -8,6 +8,6 @@
 import Foundation
 
 class DetailsMiddleWare {
-    var movie: Movies?
+    var movie: Moviess?
 
 }

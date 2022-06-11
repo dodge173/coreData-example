@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 
 class AddMoviesMiddleware {
-    var moviesData = [Movies]()
+    var moviesData = [Moviess]()
     func addNewMovies(moviesTitle: String, movieYear: String, movieImage: UIImage, movieRating: String, movieGenre: String) {
-        moviesData.append(Movies(movieTitle: moviesTitle, movieYear: movieYear, movieImage: movieImage, movieRating: movieRating, movieGenre: movieGenre))
+        moviesData.append(Moviess(movieTitle: moviesTitle, movieYear: movieYear, movieImage: movieImage, movieRating: movieRating, movieGenre: movieGenre))
     }
     
 }
