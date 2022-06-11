@@ -20,4 +20,14 @@ class MoviesTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    func setData(movies: Movies) {
+        let yearString = movies.moviesYear
+        let imageBase64 = movies.movieImage
+        let dataDecoded : Data = Data(base64Encoded: imageBase64!, options: .ignoreUnknownCharacters)!
+        let decodedimage = UIImage(data: dataDecoded)
+        imageView!.image = decodedimage
+        textLabel?.text = movies.moviesTitle
+        detailTextLabel?.text = yearString
+    }
+    
 }

@@ -16,6 +16,7 @@ class AddMoviesViewController: UIViewController {
     @IBOutlet weak var submitBtn: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     // MARK: - Props
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var middleware = AddMoviesMiddleware()
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -28,9 +29,6 @@ class AddMoviesViewController: UIViewController {
     func initView() {
         imageView.layer.cornerRadius = 20
         title = "Add New Movie"
-    }
-    func initViewModel() {
-        
     }
     // MARK: - View Functions
     func gestureRecognizer() {
@@ -75,13 +73,20 @@ class AddMoviesViewController: UIViewController {
         let movieYearTF = movieYearTF.text ?? ""
         let movieGenTF = movieGenTF.text ?? ""
         let MovieRateTF = MovieRateTF.text ?? ""
-        guard let imageView = imageView.image else { return }
-        middleware.addNewMovies(moviesTitle: moviesTitle, movieYear: movieYearTF, movieImage: imageView, movieRating: MovieRateTF, movieGenre: movieGenTF)
-        AppManger.shared.moviesData = middleware.moviesData[0]
+        let imageData = imageView.image!.pngData()
+        let imageBase64 = imageData!.base64EncodedString(options: .lineLength64Characters)
+        let movieDB = Movies(context: self.context)
+        movieDB.moviesTitle = moviesTitle
+        movieDB.moviesYear = movieYearTF
+        movieDB.movieGenre = movieGenTF
+        movieDB.movieRating = MovieRateTF
+        movieDB.movieImage = imageBase64
+        try! self.context.save()
         self.navigationController?.popViewController(animated: true)
     }
 
 }
+// MARK: - ImagePicker
 extension AddMoviesViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)

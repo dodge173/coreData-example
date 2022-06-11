@@ -28,6 +28,7 @@ class DetailsViewController: UIViewController {
     // MARK: - Main Functions
     func initView() {
         initLabelsAndImages()
+        imageView.layer.cornerRadius = 30
     }
     func initViewModel() {
         
@@ -37,11 +38,14 @@ class DetailsViewController: UIViewController {
         guard let movie = middleware.movie else {
             return
         }
-        movieTitle.text = movie.movieTitle
-        movieYear.text = movie.movieYear
+        movieTitle.text = movie.moviesTitle
+        movieYear.text = movie.moviesYear
         movieGen.text = movie.movieGenre
         MovieRate.text = movie.movieRating
-        imageView.image = movie.movieImage
+        let imageBase64 = movie.movieImage
+        let dataDecoded : Data = Data(base64Encoded: imageBase64!, options: .ignoreUnknownCharacters)!
+        let decodedimage = UIImage(data: dataDecoded)
+        imageView!.image = decodedimage
     }
 
 }

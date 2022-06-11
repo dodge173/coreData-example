@@ -22,10 +22,11 @@ class MoviesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DispatchQueue.main.async {
-            self.loadData()
+            self.appendNew()
             self.tableView.reloadData()
             self.handleEmpty()
         }
+        initViewModel()
     }
     // MARK: - Main Functions
     func initView() {
@@ -33,7 +34,8 @@ class MoviesViewController: UIViewController {
         handleEmpty()
     }
     func initViewModel() {
-        loadData()
+        appendNew()
+        fetchData()
     }
     // MARK: - View Functions
     func tableViewConfig() {
@@ -54,9 +56,15 @@ class MoviesViewController: UIViewController {
         }
     }
     // MARK: - Data Functions
-    func loadData() {
+    func appendNew() {
         guard let movieData = AppManger.shared.moviesData else {return}
         middleware.appendToBasket(newMovie: movieData)
+    }
+    func fetchData() {
+        CoreDataManger.shared.fetch(returnType: Movies.self) { [weak self] (result) in
+            self?.middleware.moviesData = result
+            self?.tableView.reloadData()
+        }
     }
     // MARK: - IBActions
     @IBAction func addNewMovies(_ sender: Any) {
@@ -75,16 +83,12 @@ extension MoviesViewController: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeue() as MoviesTableViewCell
-        let yearString = String(middleware.moviesData[indexPath.row].movieYear)
-        cell.textLabel?.text = middleware.moviesData[indexPath.row].movieTitle
-        cell.detailTextLabel?.text = yearString
-        cell.imageView?.image = middleware.moviesData[indexPath.row].movieImage
+        cell.setData(movies: middleware.moviesData[indexPath.row])
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
-    
 }
 // MARK: - TableViewDelegate
 extension MoviesViewController: UITableViewDelegate {
@@ -95,5 +99,21 @@ extension MoviesViewController: UITableViewDelegate {
         let vc = storyboard.instantiateViewController(withIdentifier: "DetailsViewController") as! DetailsViewController
         vc.middleware.movie = movie
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tableView.beginUpdates()
+            let item = middleware.moviesData[indexPath.row]
+            CoreDataManger.shared.delete(returnType: Movies.self, delete: item)
+            CoreDataManger.shared.fetch(returnType: Movies.self) { (history) in
+                self.middleware.moviesData = history
+                self.handleEmpty()
+            }
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.endUpdates()
+        }
     }
 }
