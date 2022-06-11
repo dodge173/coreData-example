@@ -29,6 +29,7 @@ class DetailsViewController: UIViewController {
     func initView() {
         initLabelsAndImages()
         imageView.layer.cornerRadius = 30
+        title = "Movie Details"
     }
     func initViewModel() {
         
